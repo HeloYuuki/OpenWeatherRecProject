@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<title>Localidade detalhes</title>
+
+<head th:replace="head :: head"></head>
+
+<body>
+  <!-- 
+    BARRA DE NAVEGACAO 
+  -->
+  <div th:replace="menu :: menu"></div>
+  <!-- 
+    CONTEUDO DA PAGINA 
+  -->
+  <main class="container">
+    <div class="bg-light p-5 rounded">
+      <h3>Gerenciar localidades</h3>      
+            <div th:switch="${localidade.id>0}">
+      	<p th:case="${true}">Atualização</p>
+      	<p th:case="*">Cadastro localidade</p>
+      </div>
+      
+      <!-- obj localidade -->
+        <form th:object="${localidade}" action="/localidades/save" method="POST">
+		<input type="hidden" th:field="${localidade.id}" th:if="${localidade.id}">
+		
+        <div class="mb-3">
+          <label class="form-label" for="nome">Nome</label> 
+         <input type="text" th:field="*{nome}" class="form-control" placeholder="Digite o nome da cidade" th:errorclass="inputError" autocomplete="off">
+         <span class="error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">campo invalido</span>
+        </div>
+        
+         <div class="mb-3" th:switch="${localidade.id>0}">
+        	<div th:case="${true}">
+	          <label class="form-label" for="codigo">Codigo</label> 
+	         <input th:disabled="true" type="text" th:field="*{codigo}" class="form-control" placeholder="Cidade Code" th:errorclass="inputError" autocomplete="off">
+        	</div>
+        </div>
+        
+        
+       <!-- <div class="mb-3">
+          <label class="form-label" for="codigo">Codigo</label> 
+         <input type="text" th:field="*{codigo}" class="form-control" placeholder="Cidade Code" th:errorclass="inputError" autocomplete="off">
+         <span class="error" th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}">campo invalido</span>
+        </div>-->
+        <div class="mb-3">
+			<label class="form-label" for="latitude">Latitude</label> 
+         <input type="text" th:field="*{latitude}" class="form-control" placeholder="Digite a latitude" th:errorclass="inputError" autocomplete="off">
+         <span class="error" th:if="${#fields.hasErrors('latitude')}" th:errors="*{latitude}">campo invalido</span>
+        </div>
+          <div class="mb-3">
+          <label class="form-label" for="longitude">longitude</label> 
+         <input type="text" th:field="*{longitude}" class="form-control" placeholder="Digite a longitude" th:errorclass="inputError" autocomplete="off">
+         <span class="error" th:if="${#fields.hasErrors('longitude')}" th:errors="*{longitude}">campo invalido</span>
+        </div>
+        
+        </div>
+        
+       
+        <div class:"flex">          
+        <div class="mb-3">
+          <p th:switch="${localidade.id>0}">   <!-- maior que zero att -->
+            <button type="submit" th:case="${true}" class="btn btn-danger" th:text="Atualizar"></button>
+            <!--  //= 0 criar -->
+            <button type="submit" th:case="*" class="btn btn-primary" th:text="criar"></button>
+          </p>
+        </div>
+      </form>
+      </div>
+      <form th:object="${localidade}" action="/localidades/getapi" method="GET">
+		<!-- <input type="hidden" th:field="${localidade.id}" th:if="${localidade.id}">-->
+		 <div th:switch="${localidade.id>0}">
+		 <button th:case="${true}" type="search" class="btn btn-primary" th:formaction="@{/localidades/getapi/{id}(id=${localidade.id})}" th:text="GetAPi"></button>   <!-- passa id localidade p requisicao -->     
+		 </div>
+         <div th:if="${localidade.weather?.id != null}">
+			<div>
+	          	<label class="form-label" for="id">Identificador (OpenWeather)</label> 
+	          	<span th:text="${localidade.weather?.id}?:'unknow' "></span>
+	         </div>
+	         <div>
+	          	<label class="form-label" for="name">Nome (OpenWeather)</label> 
+	          	<span th:text="${localidade.weather?.name}?:'unknow' "></span>
+	         </div>
+	         <div>
+	          	<label class="form-label" for="country">Pais (OpenWeather)</label> 
+	          	<span th:text="${localidade.weather?.sys?.country}?:'unknow' "></span>
+	         </div>
+	         
+	        <div>
+	          	<label class="form-label" for="temp">Temperatura (OpenWeather)</label> 
+	          	<span th:text="${localidade.weather?.main?.temp}?:'unknow' "></span>
+	        </div>
+	        <div>
+	          	<label class="form-label" for="lat">Latitude (OpenWeather)</label> 
+	          	<span th:text="${localidade.weather?.coord?.lat}?:'unknow' "></span>
+	        </div>
+	        <div>
+	          	<label class="form-label" for="lon">Longitude (OpenWeather)</label> 
+	          	<span th:text="${localidade.weather?.coord?.lon}?:'unknow' "></span>
+	        </div>
+	        <div>
+	          	<label class="form-label" for="humidity">Humidade (OpenWeather)</label> 
+	          	<span th:text="${localidade.weather?.main?.humidity}?:'unknow' "></span>
+	        </div>
+	        <div>
+	          	<label class="form-label" for="pressure">Pressão (OpenWeather)</label> 
+	          	<span th:text="${localidade.weather?.main?.pressure}?:'unknow' "></span>
+	        </div>
+	         
+	        <div>
+		         <label class="form-label" for="Main">Main (OpenWeather)</label> 
+		         <div th:each="weather : ${localidade.weather?.weather}" th:text="${weather.main}?:'unknow'">
+		    	</div>
+         	</div>
+         
+         	<div>
+		         <label class="form-label" for="description">Descrição Main (OpenWeather)</label> 
+		         <div th:each="weather : ${localidade.weather?.weather}" th:text="${weather.description}?:'unknow'">
+		    	</div>
+         	</div>
+         	
+	        <div>
+		         <label class="form-label" for="co">Poluição CO (OpenWeather)</label> 
+		         <div th:each="polution : ${localidade.polution?.list}" th:text="${polution.components?.co}?:'unknow'">
+		         </div>
+	        </div>
+         
+	        <div>
+		         <label class="form-label" for="no">Poluição NO (OpenWeather)</label> 
+		         <div th:each="polution : ${localidade.polution?.list}" th:text="${polution.components?.no}?:'unknow'">
+		         </div>
+	        </div>
+         
+            <div>
+		         <label class="form-label" for="aqi">Qualidade do Ar  (OpenWeather)</label> 
+		         <div th:each="polution : ${localidade.polution?.list}" th:text="${polution.main.aqi}?:'unknow'">
+		         </div>
+         	</div>
+         </div>
+      </form>
+      
+    </div>
+  </main>
+  <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

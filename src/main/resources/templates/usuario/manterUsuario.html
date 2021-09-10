@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="head :: head"></head>
+
+<body>
+  <!-- 
+    BARRA DE NAVEGACAO 
+  -->
+  <div th:replace="menu :: menu"></div>
+  <!-- 
+    CONTEUDO DA PAGINA 
+  -->
+  <main class="container">
+    <div class="bg-light p-5 rounded">
+      <h3>Gerenciar usuarios</h3>      
+            <div th:switch="${usuario.id>0}">
+      	<p th:case="${true}">Atualização</p>
+      	<p th:case="*">Cadastro usuario</p>
+      </div>
+      
+       <form th:object="${usuario}" action="/usuarios/save" method="POST">
+		<input type="hidden" th:field="${usuario.id}" th:if="${usuario.id}">
+		
+        <div class="mb-3">
+          <label class="form-label" for="nome">Nome</label> 
+         <input type="text" th:field="*{nome}" class="form-control" placeholder="Nome" th:errorclass="inputError" autocomplete="off">
+         <span class="error" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}">campo invalido</span>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="email">Email</label> 
+         <input type="text" th:field="*{email}" class="form-control" placeholder="nome@email.com" th:errorclass="inputError" autocomplete="off">
+         <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">campo invalido</span>
+        </div>
+        <div class="mb-3">
+        	<p th:switch="${usuario.id>0}">
+        		<label th:case="${true}" class="form-label" for="nome">Nova Senha</label> 
+          		<label th:case="*" class="form-label" for="nome">Senha</label> 
+          </p>
+         <input type="password" th:field="*{password}" class="form-control" placeholder="******" th:errorclass="inputError" autocomplete="off">
+         <span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">campo invalido</span>
+        </div>
+          <div class="mb-3">
+          <label class="form-label" for="nome">Confirmar a Senha</label> 
+         <input type="password" th:field="*{confirmPassword}" class="form-control" placeholder="******" th:errorclass="inputError" autocomplete="off">
+         <span class="error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">campo invalido</span>
+        </div>
+
+        </div>
+        
+        
+        
+        <div class="mb-3">
+          <p th:switch="${usuario.id>0}">
+            <button type="submit" th:case="${true}" class="btn btn-danger" th:text="Atualizar"></button>
+            <button type="submit" th:case="*" class="btn btn-primary" th:text="criar"></button>
+          </p>
+        </div>
+      </form>
+      
+    </div>
+  </main>
+  <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

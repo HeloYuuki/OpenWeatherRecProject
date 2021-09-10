@@ -1,0 +1,27 @@
+
+body {
+  min-height: 75rem;
+  padding-top: 4.5rem;
+}
+span.error{
+	color: red;
+}
+.inputError{
+	border: 1px solid red;
+}
+div.row {
+	margin-bottom: 20px;
+} 
+
+.flex{
+	display:flex;
+}
+
+.api-content{
+	background: aliceblue;
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 10px;	
+    margin-top: 15px;
+    margin-bottom: 10px; 
+}
